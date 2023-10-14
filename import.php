@@ -22,7 +22,8 @@ if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == UPLOAD_ERR_OK)
     $columnsName = [];
     $isFirstRow = true;
     $createTableSQL = "CREATE TABLE IF NOT EXISTS $tableName (
-        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY
+        id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
     $mysqli->query($createTableSQL);
 
@@ -36,14 +37,15 @@ if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] == UPLOAD_ERR_OK)
                     // Collect the column names from the CSV file
                     $data_value[$i] = str_replace(' ', '_', $data[$i]);
                     $columnsName[$i] = $data_value[$i];
+                    echo($data_value[$i]);
 
                     // Generate ALTER TABLE statements to add these columns to the table
-                    $sql = "ALTER TABLE $tableName ADD {$data_value[$i]} VARCHAR(255)";
+                    $sql = "ALTER TABLE $tableName ADD `{$data_value[$i]}` VARCHAR(255)";
                     
                     if ($mysqli->query($sql) === TRUE) {
-                        echo "Column '{$data_value[$i]}' added successfully.";
+                        echo "Column `{$data_value[$i]}` added successfully.";
                     } else {
-                        echo "Error adding column '{$data_value[$i]}': " . $mysqli->error;
+                        echo "Error adding column `{$data_value[$i]}`: " . $mysqli->error;
                     }
                 }
             }
